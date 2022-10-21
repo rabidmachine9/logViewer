@@ -17,21 +17,27 @@ import (
 
 func dialogScreen(win fyne.Window) fyne.CanvasObject {
 	return widget.NewButton("Open Log File", func() {
-		dialog.ShowFileOpen(func(file fyne.URIReadCloser, err error) {
-			if err != nil {
-				dialog.ShowError(err, win)
-				return
-			}
-			if file == nil {
-				log.Println("Cancelled")
-				return
-			}
-			fmt.Printf("%s",file.URI().Path())
-			
-			addToFileList(&fileList, file.URI().Path() )
-			sliceToText(fileList, storageFile)
-		}, win)
+		fileDialog(win)
 	})
+}
+
+func fileDialog(win fyne.Window) {
+	dialog.ShowFileOpen(func(file fyne.URIReadCloser, err error) {
+		if err != nil {
+			dialog.ShowError(err, win)
+			return
+		}
+		if file == nil {
+			log.Println("Cancelled")
+			return
+		}
+		fmt.Printf("%s",file.URI().Path())
+		
+		addToFileList(&fileList, file.URI().Path() )
+		sliceToText(fileList, storageFile)
+	}, win)
+	
+
 }
 
 func addToFileList(list *[]string, filePath string) {
