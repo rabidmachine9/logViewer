@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"reflect"
 	"time"
 
@@ -17,11 +16,10 @@ var storageFile = "storage.txt"
 
 
 func main(){
-	//var myTabsInfo = make(map[string]LogTab)
 	var logs = make(map[string][]string)
 	var numberOfLines = 20
 	fileMap = textLinesToMap(storageFile)
-	fmt.Println("file Map:",fileMap )
+
 	a := app.NewWithID("log.viewer")
 	w := a.NewWindow("Log Viewer")
 	w.SetMainMenu(makeMenu(a, w))

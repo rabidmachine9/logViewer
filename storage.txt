@@ -1,3 +1,0 @@
-/private/var/log/system.log
-/private/var/log/shutdown_monitor.log
-/private/var/log/displaypolicyd.stdout.log

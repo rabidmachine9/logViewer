@@ -10,7 +10,10 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/dialog"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+
+	"github.com/atotto/clipboard"
 )
 
 //open file button
@@ -31,7 +34,6 @@ func fileDialog(win fyne.Window) {
 			log.Println("Cancelled")
 			return
 		}
-		//fmt.Printf("%s",file.URI().Path())
 		
 		addToFileList(fileMap, file.URI().Path() )
 		sliceToText(fileMap, storageFile)
@@ -127,7 +129,6 @@ func textLinesToSlice(filename string) [] string {
 func getLinesForTab(filename string, linesNum int) []string {
 	lines := textLinesToSlice(filename)
 	reverse(lines)
-	//fmt.Println("lines slice:",lines )
 	if(len(lines) < linesNum){
 		return lines
 	}else {
@@ -150,10 +151,19 @@ func createNewTab(tabs *container.DocTabs,filePath string, logs map[string][]str
 				return len(logs[filePath])
 		},
 		func() fyne.CanvasObject {
-				return widget.NewLabel(filePath)
+			return container.NewHBox (
+				widget.NewLabel(filePath),
+				layout.NewSpacer(),
+				widget.NewButton("Copy", nil),
+			)
 		},
 		func(i widget.ListItemID, o fyne.CanvasObject) {
-			o.(*widget.Label).SetText((logs[filePath])[i])
+			o.(*fyne.Container).Objects[0].(*widget.Label).SetText((logs[filePath])[i])
+			o.(*fyne.Container).Objects[1].(*layout.Spacer).Show()
+
+			o.(*fyne.Container).Objects[2].(*widget.Button).OnTapped = func() {
+				clipboard.WriteAll(logs[filePath][i])
+			}				
 		},
 	)
 	tabs.Append(container.NewTabItem(filePath, widgetLists[filePath]))
